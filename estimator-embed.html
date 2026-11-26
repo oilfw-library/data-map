@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" href="data:," />
+<title>Estimate Your Bill — Oil Information Library of Fort Worth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#495A58;
+    --teal-dark:#354442;
+    --teal-light:#E8ECEB;
+    --peach:#D4967D;
+    --peach-dark:#B87A62;
+    --peach-soft:#FDF0E9;
+    --bg:#F7F3ED;
+    --surface:#FFFFFF;
+    --surface-2:#F1EBE3;
+    --ink:#303636;
+    --muted:#6B7774;
+    --line:#DDD5C8;
+    --line-strong:#C9BEB0;
+    --input-bg:#FFFFFF;
+    --focus:#495A58;
+    --total-bg:#495A58;
+    --total-ink:#FFFFFF;
+    --shadow:0 1px 3px rgba(73,90,88,.08),0 8px 24px rgba(73,90,88,.07);
+  }
+  
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Almarai",system-ui,sans-serif;font-weight:400;line-height:1.55;-webkit-font-smoothing:antialiased}
+  button,input{font:inherit}
+  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.25rem}
+  a{color:var(--teal)}
+  
+
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px 28px}
+  @media(max-width:560px){.wrap{padding:0 14px 28px}}
+
+  /* Header */
+  .hero{padding:36px 0 8px}
+  .hero-rule{width:52px;height:4px;background:var(--peach);border-radius:2px;margin-bottom:18px}
+  h1,h2,h3{font-family:"Libre Baskerville",Georgia,serif;line-height:1.2;margin:0}
+  h1{font-size:clamp(2rem,5vw,2.9rem);font-weight:700;letter-spacing:-.01em;color:var(--teal-dark)}
+  
+  .hero-sub{margin:10px 0 0;font-size:1.08rem;color:var(--muted);max-width:640px}
+  .hero-sub strong{color:var(--ink);font-weight:700}
+  .source-note{margin-top:14px;display:inline-flex;gap:8px;align-items:center;background:var(--teal-light);color:var(--teal-dark);padding:7px 12px;border-radius:999px;font-size:.86rem;font-weight:700}
+  
+  .source-note i{width:7px;height:7px;background:var(--peach);border-radius:50%;display:block;flex:none}
+
+  .howto{margin:22px 0 6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;box-shadow:var(--shadow)}
+  @media(max-width:700px){.howto{grid-template-columns:1fr;gap:10px;padding:14px 16px}}
+  .howto div{display:flex;gap:12px;align-items:flex-start}
+  .howto b.num{flex:none;width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;font-size:.9rem;margin-top:1px}
+  
+  .howto p{margin:0;font-size:.94rem;color:var(--muted)}
+  .howto p strong{color:var(--ink)}
+
+  /* Membership selector */
+  .membership{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+  .membership legend{font-family:"Libre Baskerville",Georgia,serif;font-weight:700;font-size:1.05rem;padding:0}
+  .membership fieldset{border:0;margin:0;padding:0}
+  .membership .hint{margin:4px 0 12px;color:var(--muted);font-size:.92rem}
+  .tier-options{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:10px;align-items:stretch}
+  /* Desktop placement: 4 columns x 2 rows, + tiers directly under their base tiers */
+  .tier-options .tier:nth-child(1){grid-column:1;grid-row:1 / span 2}
+  .tier-options .tier:nth-child(2){grid-column:2;grid-row:1}
+  .tier-options .tier:nth-child(3){grid-column:2;grid-row:2}
+  .tier-options .tier:nth-child(4){grid-column:3;grid-row:1}
+  .tier-options .tier:nth-child(5){grid-column:3;grid-row:2}
+  .tier-options .tier:nth-child(6){grid-column:4;grid-row:1}
+  .tier-options .tier:nth-child(7){grid-column:4;grid-row:2}
+  @media(max-width:700px){
+    .tier-options{grid-template-columns:repeat(2,1fr);grid-template-rows:auto repeat(3,1fr)}
+    .tier-options .tier:nth-child(1){grid-column:1 / -1;grid-row:1}
+    .tier-options .tier:nth-child(2){grid-column:1;grid-row:2}
+    .tier-options .tier:nth-child(3){grid-column:2;grid-row:2}
+    .tier-options .tier:nth-child(4){grid-column:1;grid-row:3}
+    .tier-options .tier:nth-child(5){grid-column:1;grid-row:4}
+    .tier-options .tier:nth-child(6){grid-column:2;grid-row:3}
+    .tier-options .tier:nth-child(7){grid-column:2;grid-row:4}
+  }
+  .tier-permo{display:block;font-family:"Libre Baskerville",Georgia,serif;font-size:1.5rem;font-weight:700;line-height:1.1;color:var(--teal-dark);margin-top:5px;font-variant-numeric:tabular-nums;order:2}
+  
+  .tier-permo small{font-family:"Almarai",sans-serif;font-size:.85rem;font-weight:700;color:var(--muted)}
+  .tier-total{display:block;font-size:.88rem;font-weight:800;margin-top:auto;padding-top:6px;order:4}
+  .tier-perk{display:block;color:var(--muted);font-size:.82rem;line-height:1.4;margin-top:4px;order:3}
+  .tier-caption{margin:10px 0 0;font-size:.88rem;color:var(--muted)}
+  .nonprofit-note{margin:12px 0 0;background:var(--teal-light);border-radius:10px;padding:11px 14px;font-size:.95rem;line-height:1.5;color:var(--teal-dark)}
+  
+  .nonprofit-note strong{font-weight:800}
+  .tier{display:block;cursor:pointer;height:100%;min-width:0}
+  .tier-card{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--line-strong);border-radius:12px;padding:12px 14px;height:100%;min-height:52px;background:var(--surface);box-sizing:border-box}
+  .tier-card>span{display:flex;flex-direction:column;flex:1;min-width:0;height:100%}
+  .tier-card>span>strong{order:1}
+  /* Not a member spans both rows on desktop — center its content vertically */
+  .tier-options .tier:nth-child(1) .tier-card{align-items:center}
+  .tier-options .tier:nth-child(1) .tier-card>span{justify-content:center;height:auto}
+  .tier-options .tier:nth-child(1) .tier-total{margin-top:3px;padding-top:0}
+  @media(max-width:700px){
+    .tier-options .tier:nth-child(1) .tier-card{align-items:flex-start}
+    .tier-options .tier:nth-child(1) .tier-card>span{justify-content:flex-start;height:100%}
+    .tier-options .tier:nth-child(1) .tier-total{margin-top:3px}
+  }
+  .tier-card:has(input:checked){border-color:var(--teal);background:var(--teal-light);box-shadow:inset 0 0 0 1px var(--teal)}
+  
+  .tier input[type="radio"]{flex:none;width:22px;height:22px;min-height:22px;margin:1px 0 0;padding:0;cursor:pointer;opacity:1;position:relative;z-index:2;pointer-events:auto;accent-color:#495A58}
+  .tier input[type="radio"]:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+  .tier-card strong{display:block;font-size:.98rem;line-height:1.3}
+  .tier-card small{display:block;color:var(--muted);font-size:.86rem;line-height:1.4;margin-top:2px}
+  .tier-card .tier-price{color:var(--teal-dark);font-weight:800}
+  
+  .membership-note{margin:12px 0 0;font-size:.9rem;color:var(--muted);line-height:1.55;border-top:1px solid var(--line);padding-top:11px}
+
+  /* Groups */
+  .group{margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+  .group-head{padding:18px 20px 14px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid var(--teal);background:linear-gradient(to bottom,var(--surface),var(--surface))}
+  @media(max-width:560px){.group-head{padding:16px 16px 12px}}
+  .group-head h2{font-size:1.22rem;font-weight:700}
+  .group-head p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+  .group-sub{text-align:right;flex:none}
+  .group-sub span{display:block;font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .group-sub strong{font-family:"Libre Baskerville",serif;font-size:1.25rem;color:var(--teal-dark)}
+  
+
+  table{width:100%;border-collapse:collapse}
+  thead th{font-size:.76rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:800;text-align:left;padding:10px 20px 8px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+  thead th.r, tbody td.r{text-align:right}
+  thead th.c, tbody td.c{text-align:center}
+  tbody tr{border-bottom:1px solid var(--line)}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr.has-qty{background:var(--peach-soft)}
+  
+  tbody td{padding:13px 20px;vertical-align:middle}
+  @media(max-width:560px){ tbody td{padding:12px 16px} }
+  .item-name{font-weight:700;font-size:.99rem;line-height:1.35}
+  .item-note{font-size:.86rem;color:var(--muted);margin-top:2px;line-height:1.4}
+  .badge{display:inline-block;margin-left:6px;vertical-align:1px;background:var(--teal);color:#fff;font-size:.68rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:999px;white-space:nowrap}
+  .badge.peach{background:var(--peach);color:#2B1E18}
+  .price{white-space:nowrap;font-weight:700}
+  .price small{display:block;font-weight:400;color:var(--muted);font-size:.82rem;white-space:nowrap}
+  .line-total{font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums;min-width:76px}
+  .line-total.zero{color:var(--muted);font-weight:400}
+
+  /* Qty control */
+  .qty{display:inline-flex;align-items:stretch;border:1.5px solid var(--line-strong);border-radius:10px;overflow:hidden;background:var(--input-bg)}
+  .qty button{width:38px;min-width:38px;border:0;background:var(--surface-2);color:var(--ink);font-size:1.15rem;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0}
+  .qty button:active{background:var(--peach);color:#fff}
+  .qty button:focus-visible,.qty input:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+  .qty input{width:64px;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);text-align:center;font-weight:800;font-variant-numeric:tabular-nums;background:transparent;color:var(--ink);padding:6px 2px;-moz-appearance:textfield;appearance:textfield}
+  .qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .qty-wrap{text-align:center}
+  .qty-unit{font-size:.78rem;color:var(--muted);margin-top:4px}
+  .min-note{display:none;margin-top:6px;font-size:.82rem;color:var(--peach-dark);font-weight:700;max-width:220px;margin-left:auto;margin-right:auto;line-height:1.35}
+  
+  .min-note.show{display:block}
+  .auto-note{margin-top:6px;font-size:.84rem;font-weight:700;color:var(--peach-dark);line-height:1.35}
+  
+  tbody tr.day-na{opacity:.55}
+  tbody tr.day-na .auto-note{color:var(--muted)}
+  .qty.locked{opacity:.5}
+  .qty button:disabled,.qty input:disabled{cursor:not-allowed}
+
+  /* Mobile table reflow */
+  @media(max-width:720px){
+    thead{display:none}
+    table,tbody,tr,td{display:block;width:100%}
+    tbody tr{padding:14px 16px 16px}
+    tbody td{padding:0;border:0}
+    td.cell-item{margin-bottom:10px}
+    .row-grid{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}
+    td.cell-price{padding:0}
+    td.cell-qty{padding:0}
+    td.cell-total{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--line);padding-top:10px;margin-top:4px}
+    td.cell-total::before{content:"Line total";font-size:.82rem;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+    .qty-wrap{text-align:right}
+    .price small{display:inline;margin-left:4px}
+  }
+  @media(min-width:721px){
+    .row-grid{display:contents}
+  }
+
+  /* Summary */
+  .summary{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+  .summary-inner{padding:20px}
+  @media(max-width:560px){.summary-inner{padding:18px 16px}}
+  .summary h2{font-size:1.3rem;margin-bottom:14px}
+  .sum-rows{display:grid;grid-template-columns:1fr 1fr;gap:8px 28px}
+  @media(max-width:560px){.sum-rows{grid-template-columns:1fr}}
+  .sum-row{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.97rem}
+  .sum-row span{color:var(--muted)}
+  .sum-row strong{font-variant-numeric:tabular-nums}
+  .grand{margin-top:18px;background:var(--total-bg);color:var(--total-ink);border-radius:12px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  .grand label{font-family:"Libre Baskerville",serif;font-size:1.05rem;font-weight:700}
+  .grand label small{display:block;font-family:"Almarai",sans-serif;font-weight:400;font-size:.88rem;opacity:.85;margin-top:2px}
+  .grand output{font-family:"Libre Baskerville",serif;font-size:2rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+  .actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+  .btn{border-radius:10px;padding:10px 18px;cursor:pointer;font-weight:800;border:1.5px solid var(--teal);min-height:44px}
+  .btn-reset{background:transparent;color:var(--teal)}
+  
+  .btn-reset:active{transform:translateY(1px)}
+  .btn-print{background:var(--teal);color:#fff}
+  
+  .savings-line{display:none;margin-top:14px;background:#EAF3EC;border:1px solid #7BAF85;border-radius:10px;padding:13px 15px}
+  
+  .savings-line.show{display:block}
+  .savings-line .savings-main{font-weight:800;font-size:1.02rem;color:#2F5D3A}
+  
+  .savings-line .savings-detail{margin-top:3px;font-size:.9rem;color:var(--muted)}
+  .due-rows{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px 28px}
+  @media(max-width:560px){.due-rows{grid-template-columns:1fr}}
+  .compare-line{display:none;margin-top:14px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 15px;font-size:.95rem;line-height:1.55}
+  .compare-line.show{display:block}
+  .compare-line strong{color:var(--teal-dark)}
+  
+  .project-callout{margin-top:16px;background:var(--teal);color:#fff;border-radius:12px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start}
+  
+  .project-callout .pc-icon{flex:none;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;font-family:"Libre Baskerville",serif;font-weight:700;font-size:1.15rem}
+  
+  .project-callout p{margin:0;font-size:1.02rem;line-height:1.55}
+  .project-callout p strong{font-family:"Libre Baskerville",serif}
+  .disclaimer{margin-top:16px;background:var(--peach-soft);border:1px solid var(--peach);border-radius:10px;padding:13px 15px;font-size:.94rem;line-height:1.5}
+  .footnotes{margin-top:14px;color:var(--muted);font-size:.9rem;line-height:1.6}
+  .footnotes p{margin:6px 0}
+
+  /* Sticky mobile total */
+  .sticky-bar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--total-bg);color:var(--total-ink);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:none;box-shadow:0 -4px 20px rgba(0,0,0,.18)}
+  .sticky-bar-inner{max-width:1060px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .sticky-bar span{font-size:.92rem;font-weight:700}
+  .sticky-bar span small{display:block;font-weight:400;opacity:.85;font-size:.8rem}
+  .sticky-bar strong{font-family:"Libre Baskerville",serif;font-size:1.45rem;font-variant-numeric:tabular-nums}
+  .sticky-bar a{color:inherit;font-weight:800;font-size:.9rem;text-decoration:underline;text-underline-offset:3px;padding:8px 4px}
+  @media(max-width:720px){ .sticky-bar{display:block} }
+
+  footer{margin-top:26px;color:var(--muted);font-size:.88rem;text-align:center;line-height:1.6}
+  @media print{
+    .sticky-bar,.actions,.howto{display:none!important}
+    body{background:#fff}
+    .wrap{padding-bottom:20px}
+    .group,.summary{box-shadow:none;break-inside:avoid}
+  }
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <section class="howto" aria-label="How to use this estimator">
+    <div><b class="num">1</b><p><strong>Find your items.</strong> They’re grouped just like the printed charges sheet — data, printing, supplies, and geotech services.</p></div>
+    <div><b class="num">2</b><p><strong>Enter quantities.</strong> Use the + / − buttons or type a number. Hours can be entered in quarter-hour steps.</p></div>
+    <div><b class="num">3</b><p><strong>Check your total.</strong> Line totals, group subtotals, and your estimated total update as you go.</p></div>
+  </section>
+
+  <section class="membership" aria-label="Your membership">
+    <fieldset>
+      <legend>Your membership</legend>
+      <p class="hint">Pick your tier and compare what it works out to per month — the longer the term, the less you pay each month. Annual+ and Corporate+ also include free librarian hours every month, applied to research and in-house geotech time, research first, then in-house splicing. Not a member? The $100 day pass is added to your estimate automatically.</p>
+      <div class="tier-options" role="radiogroup" aria-label="Your membership">
+        <label class="tier">
+          <div class="tier-card"><input type="radio" name="membership" value="none" checked><span><strong>Not a member</strong><span class="tier-permo">$100<small> /day</small></span><span class="tier-total">Day Pass · $100 total</span></span></div>
+        </label>
+        <label class="tier">
+          <div class="tier-card"><input type="radio" name="membership" value="monthly"><span><strong>Monthly</strong><span class="tier-permo">$250<small> /mo</small></span><span class="tier-total">$250 total</span></span></div>
+        </label>
+        <label class="tier">
+          <div class="tier-card"><input type="radio" name="membership" value="quarterly"><span><strong>Quarterly</strong><span class="tier-permo">$200<small> /mo</small></span><span class="tier-total">$600 total</span></span></div>
+        </label>
+        <label class="tier">
+          <div class="tier-card"><input type="radio" name="membership" value="annual"><span><strong>Annual</strong><span class="tier-permo">$183<small> /mo</small></span><span class="tier-total">$2,200 total</span></span></div>
+        </label>
+        <label class="tier">
+          <div class="tier-card"><input type="radio" name="membership" value="annualplus"><span><strong>Annual+</strong><span class="tier-permo">$250<small> /mo</small></span><span class="tier-total">$3,000 total</span><span class="tier-perk">Includes 1 free librarian hr/month</span></span></div>
+        </label>
+        <label class="tier">
+          <div class="tier-card"><input type="radio" name="membership" value="corporate"><span><strong>Corporate</strong><span class="tier-permo">$417<small> /mo</small></span><span class="tier-total">$5,000 total</span><span class="tier-perk">Unlimited employees</span></span></div>
+        </label>
+        <label class="tier">
+          <div class="tier-card"><input type="radio" name="membership" value="corporateplus"><span><strong>Corporate+</strong><span class="tier-permo">$542<small> /mo</small></span><span class="tier-total">$6,500 total</span><span class="tier-perk">Unlimited employees · includes 4 free librarian hrs/month</span></span></div>
+        </label>
+      </div>
+      <p class="nonprofit-note">Our 501(c)(3) status requires membership for any services rendered — that's why the one-day membership is included automatically for non-members.</p>
+      <p class="tier-caption">Membership prices shown for comparison — not added to this estimate.</p>
+      <p class="membership-note">Free librarian hours refresh each month and apply to research and in-house geotech time. Annual+ includes 1 hour/month (up to $480/year in value); Corporate+ includes 4 hours/month (up to $1,920/year).</p>
+    </fieldset>
+  </section>
+
+  <div id="groups"></div>
+
+  <section class="summary" id="summary" aria-label="Your estimate">
+    <div class="summary-inner">
+      <h2>Your estimate</h2>
+      <div class="sum-rows" id="sumRows"></div>
+      <div class="savings-line" id="savingsLine" role="status">
+        <div class="savings-main" id="savingsMain">Free librarian hours applied: 0 hrs — you save $0.00</div>
+        <div class="savings-detail" id="savingsDetail"></div>
+      </div>
+      <div class="grand">
+        <label for="grandTotal">Estimated total <small>After membership savings, if any. Includes Well Log Digitizing, which is billed directly by NthDS.</small></label>
+        <output id="grandTotal">$0.00</output>
+      </div>
+      <div class="due-rows" aria-label="Who you pay">
+        <div class="sum-row"><span>Due to the library (OILFW)</span><strong id="dueLibrary">$0.00</strong></div>
+        <div class="sum-row"><span>Due directly to NthDS</span><strong id="dueNthds">$0.00</strong></div>
+      </div>
+      <p class="compare-line" id="compareLine"></p>
+      <div class="project-callout">
+        <span class="pc-icon" aria-hidden="true">?</span>
+        <p><strong>Planning a large project?</strong> Per-item and per-hour rates can be reduced on a case-by-case basis. Contact the librarian for a project quote.</p>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-reset" id="resetBtn">Reset — clear all quantities</button>
+      </div>
+      <p class="disclaimer"><strong>Please note:</strong> Estimate only. Postage and special projects are not included, and outsourced splicing adds shipping. Final charges are confirmed by the librarian.</p>
+      <div class="footnotes">
+        <p><strong>Shipping:</strong> Outsourced fiche splicing is $20 per log <em>plus shipping</em>. Shipping isn’t included in the total above because the amount depends on the order — the librarian will confirm it.</p>
+        <p><strong>Research minimum:</strong> Research, phone requests, and large scanning orders are $40 per hour with a 1-hour minimum, then billed in 15-minute increments. If you enter less than an hour, this estimator bills one full hour.</p>
+        <p><strong>Not a member?</strong> The $100 One Day Membership is added to your estimate automatically — you'll see it under Geotech Services. Members don't need a day pass.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+
+<script>
+var CATALOG = [
+  {
+    id: "data", title: "Data Reproduction", desc: "Scans and copies of logs, cards, reports, and maps from the collection.",
+    items: [
+      { id:"scout", name:"Scout Cards", note:"Scanned or copied", price:1, unit:"per card", qtyLabel:"cards", step:1 },
+      { id:"well-paper", name:"Well Logs (paper)", note:"Scanned", price:10, unit:"per log", qtyLabel:"logs", step:1 },
+      { id:"well-fiche-copy", name:"Well Logs (fiche)", note:"Scanned or copied, 11×17", price:10, unit:"per log", qtyLabel:"logs", step:1 },
+      { id:"well-fiche-out", name:"Well Logs (fiche)", note:"Scanned & spliced — outsourced", price:20, unit:"per log", qtyLabel:"logs", step:1, extra:"+ shipping" },
+      { id:"well-fiche-in", name:"Well Logs (fiche)", note:"Scanned & spliced — in house, geotech time", price:40, unit:"per hour", qtyLabel:"hours", step:0.25, hours:true },
+      { id:"mud", name:"Mud Logs (paper)", note:"Scanned", price:15, unit:"per log", qtyLabel:"logs", step:1 },
+      { id:"sample", name:"Sample Logs (paper)", note:"Scanned", price:10, unit:"per log", qtyLabel:"logs", step:1 },
+      { id:"drillers", name:"Drillers Logs", note:"Scanned or copied", price:5, unit:"per report", qtyLabel:"reports", step:1 },
+      { id:"paleo", name:"Paleo Data", note:"Scanned or copied", price:5, unit:"per report", qtyLabel:"reports", step:1 },
+      { id:"core", name:"Core Analyses", note:"Scanned or copied", price:50, unit:"per report", qtyLabel:"reports", step:1 },
+      { id:"dst", name:"Drill Stem Tests", note:"Scanned or copied", price:10, unit:"per report", qtyLabel:"reports", step:1 },
+      { id:"lockwood", name:"Lockwood Production", note:"Scanned", price:5, unit:"per page", qtyLabel:"pages", step:1 },
+      { id:"maps-scan", name:"Maps (up to 54″)", note:"Scanned", price:10, unit:"per map", qtyLabel:"maps", step:1 },
+      { id:"maps-8511", name:"Maps, copied 8.5×11", note:"Copy", price:2, unit:"per page", qtyLabel:"pages", step:1 },
+      { id:"maps-8514", name:"Maps, copied 8.5×14", note:"Copy", price:3, unit:"per page", qtyLabel:"pages", step:1 },
+      { id:"maps-1117", name:"Maps, copied 11×17", note:"Copy", price:4, unit:"per page", qtyLabel:"pages", step:1 },
+      { id:"docs-small", name:"Documents not listed", note:"Copied 8.5×11 or 8.5×14", price:1, unit:"per page", qtyLabel:"pages", step:1 },
+      { id:"docs-large", name:"Documents not listed", note:"Copied 11×17", price:1.50, unit:"per page", qtyLabel:"pages", step:1 }
+    ]
+  },
+  {
+    id: "printing", title: "Printing", desc: "Printed logs and maps, priced by the linear foot.",
+    items: [
+      { id:"print-log-sm", name:"Logs (under 9.5″ wide)", note:"Printing", price:1, unit:"per linear foot", qtyLabel:"linear ft", step:1 },
+      { id:"print-log-lg", name:"Logs (10–14″ wide)", note:"Printing", price:1.50, unit:"per linear foot", qtyLabel:"linear ft", step:1 },
+      { id:"print-map", name:"Maps (under 24″ wide)", note:"Printing", price:2, unit:"per linear foot", qtyLabel:"linear ft", step:1 }
+    ]
+  },
+  {
+    id: "supplies", title: "Supplies", desc: "Take your files with you.",
+    items: [
+      { id:"flash", name:"Flash Drives (16GB)", note:"", price:10, unit:"each", qtyLabel:"drives", step:1 }
+    ]
+  },
+  {
+    id: "geotech", title: "Geotech Services", desc: "Staff time, digitizing, and day access.",
+    items: [
+      { id:"research", name:"Research, phone requests, large scanning orders", note:"$40/hr · 1-hour minimum, then 15-minute increments", price:40, unit:"per hour", qtyLabel:"hours", step:0.25, hours:true, minHours:1 },
+      { id:"nthds", name:"Well Log Digitizing", note:"Log curves digitized by NthDS", price:55, unit:"per log", qtyLabel:"logs", step:1, badge:"Billed by NthDS" },
+      { id:"day", name:"One Day Membership", note:"For day visitors who are not members", price:100, unit:"per person", qtyLabel:"people", step:1 }
+    ]
+  }
+];
+
+function money(n){ return "$" + n.toFixed(2); }
+function fmtPrice(n){ return "$" + (Number.isInteger(n) ? n.toFixed(2) : n.toFixed(2)); }
+
+var groupsEl = document.getElementById("groups");
+var state = {}; // id -> {item, groupId, input, lineEl, rowEl, minNote}
+
+CATALOG.forEach(function(group){
+  var section = document.createElement("section");
+  section.className = "group";
+  section.setAttribute("aria-label", group.title);
+  section.innerHTML =
+    '<div class="group-head"><div><h2>'+group.title+'</h2><p>'+group.desc+'</p></div>'+
+    '<div class="group-sub"><span>Subtotal</span><strong id="sub-'+group.id+'">$0.00</strong></div></div>';
+
+  var table = document.createElement("table");
+  table.innerHTML = '<thead><tr><th style="width:42%">Item</th><th>Rate</th><th class="c">Quantity</th><th class="r">Line total</th></tr></thead>';
+  var tbody = document.createElement("tbody");
+
+  group.items.forEach(function(item){
+    var tr = document.createElement("tr");
+    tr.id = "row-" + item.id;
+    var badge = item.badge ? ' <span class="badge peach">'+item.badge+'</span>' : '';
+    var extra = item.extra ? ' <span class="badge">'+item.extra+'</span>' : '';
+    var stepAttr = item.step;
+    var minNote = item.minHours ? '<div class="min-note" id="minnote-'+item.id+'">1-hour minimum applied — billed as 1 hour.</div>' : '';
+    tr.innerHTML =
+      '<td class="cell-item"><div class="row-grid">' +
+        '<div><div class="item-name">'+item.name+badge+extra+'</div>' + (item.note ? '<div class="item-note">'+item.note+'</div>' : '') + (item.id === "day" ? '<div class="auto-note" id="dayNote"></div>' : '') + '</div>' +
+      '</div></td>' +
+      '<td class="cell-price"><span class="price">'+fmtPrice(item.price)+'<small>'+item.unit+'</small></span></td>' +
+      '<td class="cell-qty"><div class="qty-wrap"><span class="qty">' +
+        '<button type="button" aria-label="Decrease quantity for '+item.name+'" data-act="dec" data-id="'+item.id+'">−</button>' +
+        '<input type="number" inputmode="decimal" min="0" step="'+stepAttr+'" value="0" id="qty-'+item.id+'" aria-label="Quantity for '+item.name+' in '+item.qtyLabel+'">' +
+        '<button type="button" aria-label="Increase quantity for '+item.name+'" data-act="inc" data-id="'+item.id+'">+</button>' +
+      '</span><div class="qty-unit">'+item.qtyLabel+'</div>'+minNote+'</div></td>' +
+      '<td class="cell-total r"><span class="line-total zero" id="line-'+item.id+'">$0.00</span></td>';
+
+    // On mobile we need the grid wrapper to span cells — restructure: wrap price/qty/total visually via CSS grid on tr is complex;
+    // Instead keep table layout on desktop and block layout on mobile (handled by CSS display:block). The .row-grid div only wraps name.
+    tbody.appendChild(tr);
+    state[item.id] = { item:item, groupId:group.id, row:tr };
+  });
+
+  table.appendChild(tbody);
+  section.appendChild(table);
+  groupsEl.appendChild(section);
+});
+
+// Summary rows
+var sumRowsEl = document.getElementById("sumRows");
+CATALOG.forEach(function(g){
+  var d = document.createElement("div");
+  d.className = "sum-row";
+  d.innerHTML = "<span>"+g.title+"</span><strong id=\"sum-"+g.id+"\">$0.00</strong>";
+  sumRowsEl.appendChild(d);
+});
+var nthdsRow = document.createElement("div");
+nthdsRow.className = "sum-row";
+nthdsRow.innerHTML = "<span>of which billed directly by NthDS</span><strong id=\"sum-nthds\">$0.00</strong>";
+sumRowsEl.appendChild(nthdsRow);
+
+function getQty(item){
+  var el = document.getElementById("qty-" + item.id);
+  var v = parseFloat(el.value);
+  if (isNaN(v) || v < 0) v = 0;
+  return v;
+}
+function billedQty(item){
+  var q = getQty(item);
+  if (item.minHours && q > 0 && q < item.minHours) return item.minHours;
+  return q;
+}
+
+function fmtHours(h){
+  var r = Math.round(h * 100) / 100;
+  return Number.isInteger(r) ? String(r) : String(r);
+}
+function selectedTier(){
+  var checked = document.querySelector('input[name="membership"]:checked');
+  return checked ? checked.value : "none";
+}
+function selectedAllowance(){
+  var tier = selectedTier();
+  if (tier === "annualplus") return 1;
+  if (tier === "corporateplus") return 4;
+  return 0;
+}
+function findItem(id){
+  for (var g = 0; g < CATALOG.length; g++){
+    for (var i = 0; i < CATALOG[g].items.length; i++){
+      if (CATALOG[g].items[i].id === id) return CATALOG[g].items[i];
+    }
+  }
+  return null;
+}
+
+function recalc(){
+  // Day pass automation: non-members get 1 One Day Membership, locked in; members get none.
+  var isNonMember = selectedTier() === "none";
+  var dayInput = document.getElementById("qty-day");
+  if (dayInput){
+    dayInput.value = isNonMember ? "1" : "0";
+    dayInput.disabled = true;
+    if (dayInput.parentNode) dayInput.parentNode.classList.add("locked");
+    var dayBtns = document.querySelectorAll('button[data-id="day"]');
+    for (var db = 0; db < dayBtns.length; db++) dayBtns[db].disabled = true;
+  }
+  var dayRowEl = document.getElementById("row-day");
+  if (dayRowEl) dayRowEl.classList.toggle("day-na", !isNonMember);
+  var dayNoteEl = document.getElementById("dayNote");
+  if (dayNoteEl) dayNoteEl.textContent = isNonMember ? "Included automatically for non-members." : "Members don't need a day pass.";
+
+  var gross = 0;
+  var nthdsTotal = 0;
+  CATALOG.forEach(function(group){
+    var sub = 0;
+    group.items.forEach(function(item){
+      var q = getQty(item);
+      var bq = billedQty(item);
+      var line = bq * item.price;
+      sub += line;
+      if (item.id === "nthds") nthdsTotal = line;
+      var lineEl = document.getElementById("line-" + item.id);
+      lineEl.textContent = money(line);
+      lineEl.classList.toggle("zero", line === 0);
+      state[item.id].row.classList.toggle("has-qty", q > 0);
+      var note = document.getElementById("minnote-" + item.id);
+      if (note) note.classList.toggle("show", q > 0 && q < 1);
+    });
+    document.getElementById("sub-" + group.id).textContent = money(sub);
+    document.getElementById("sum-" + group.id).textContent = money(sub);
+    gross += sub;
+  });
+
+  // Librarian time: research (after 1-hr minimum) + in-house splicing, both at $40/hr
+  var researchItem = findItem("research");
+  var splicingItem = findItem("well-fiche-in");
+  var researchBilled = researchItem ? billedQty(researchItem) : 0;
+  var splicingBilled = splicingItem ? getQty(splicingItem) : 0;
+  var librarianHours = researchBilled + splicingBilled;
+
+  // Apply the selected tier's free hours: research first, then in-house splicing
+  var allowance = selectedAllowance();
+  var applied = Math.min(allowance, librarianHours);
+  var appliedResearch = Math.min(applied, researchBilled);
+  var appliedSplicing = applied - appliedResearch;
+  var savings = applied * 40;
+
+  var net = gross - savings;
+  if (net < 0) net = 0;
+
+  document.getElementById("sum-nthds").textContent = money(nthdsTotal);
+  document.getElementById("grandTotal").textContent = money(net);
+  var stickyEl = document.getElementById("stickyTotal");
+  if (stickyEl) stickyEl.textContent = money(net);
+  document.getElementById("dueLibrary").textContent = money(Math.max(0, net - nthdsTotal));
+  document.getElementById("dueNthds").textContent = money(nthdsTotal);
+
+  var stickyNote = document.getElementById("stickyNote");
+  if (stickyNote) stickyNote.textContent = savings > 0 ? ("After " + fmtHours(applied) + " free librarian hrs — you save " + money(savings)) : "Tap a quantity above to update";
+
+  // Savings line — only when free hours were actually applied
+  var savingsLine = document.getElementById("savingsLine");
+  if (applied > 0){
+    savingsLine.classList.add("show");
+    document.getElementById("savingsMain").textContent = "Free librarian hours applied: " + fmtHours(applied) + " hrs — you save " + money(savings);
+    var parts = [];
+    if (appliedResearch > 0) parts.push(fmtHours(appliedResearch) + " hr" + (appliedResearch === 1 ? "" : "s") + " applied to Research first");
+    if (appliedSplicing > 0) parts.push(fmtHours(appliedSplicing) + " hr" + (appliedSplicing === 1 ? "" : "s") + " applied to in-house splicing");
+    document.getElementById("savingsDetail").textContent = parts.join(" · ") + ". Your estimated total above is reduced by " + money(savings) + ".";
+  } else {
+    savingsLine.classList.remove("show");
+  }
+
+  // Comparison line — always shown when any librarian time is entered, whichever tier is selected
+  var compare = document.getElementById("compareLine");
+  if (librarianHours > 0){
+    var saveA = Math.min(librarianHours, 1) * 40;
+    var saveB = Math.min(librarianHours, 4) * 40;
+    compare.innerHTML = "On this bill, <strong>Annual+ would save you " + money(saveA) + "</strong> and <strong>Corporate+ would save you " + money(saveB) + "</strong> in librarian time.";
+    compare.classList.add("show");
+  } else {
+    compare.classList.remove("show");
+    compare.innerHTML = "";
+  }
+  if (window.__oilfwPostHeight) window.__oilfwPostHeight();
+}
+
+// Events: delegation for +/- and inputs
+document.addEventListener("click", function(e){
+  var btn = e.target.closest ? e.target.closest("button[data-act]") : null;
+  if (!btn) return;
+  var id = btn.getAttribute("data-id");
+  if (id === "day") return; // day pass quantity is set automatically by membership tier
+  var item = state[id].item;
+  var input = document.getElementById("qty-" + id);
+  var cur = parseFloat(input.value) || 0;
+  var step = item.step || 1;
+  var next = btn.getAttribute("data-act") === "inc" ? cur + step : cur - step;
+  if (next < 0) next = 0;
+  // round to avoid float dust on quarter hours
+  next = Math.round(next * 100) / 100;
+  input.value = (item.hours ? (Number.isInteger(next) ? String(next) : String(next)) : String(next));
+  recalc();
+});
+document.addEventListener("input", function(e){
+  if (e.target && e.target.id && e.target.id.indexOf("qty-") === 0) recalc();
+});
+document.addEventListener("change", function(e){
+  if (e.target && e.target.id && e.target.id.indexOf("qty-") === 0){
+    var v = parseFloat(e.target.value);
+    if (isNaN(v) || v < 0) e.target.value = "0";
+    recalc();
+  }
+});
+
+document.addEventListener("change", function(e){
+  if (e.target && e.target.name === "membership") recalc();
+});
+
+document.getElementById("resetBtn").addEventListener("click", function(){
+  Object.keys(state).forEach(function(id){
+    document.getElementById("qty-" + id).value = "0";
+  });
+  var none = document.querySelector('input[name="membership"][value="none"]');
+  if (none) none.checked = true;
+  recalc();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+recalc();
+</script>
+
+<script>
+/* Auto-resize: report full content height to the parent window so the
+   Squarespace iframe can size itself. Parent must validate event.origin
+   (https://oilfw-library.github.io) and the message type. */
+(function(){
+  function postHeight(){
+    var h = 0;
+    if (document.documentElement) h = Math.max(h, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+    if (document.body) h = Math.max(h, document.body.scrollHeight, document.body.offsetHeight);
+    if (window.parent && window.parent !== window){
+      window.parent.postMessage({ type: "oilfw-estimator-height", height: h }, "*");
+    }
+  }
+  window.__oilfwPostHeight = postHeight;
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+  document.addEventListener("click", function(){ requestAnimationFrame(postHeight); });
+  document.addEventListener("input", function(){ requestAnimationFrame(postHeight); });
+  document.addEventListener("change", function(){ requestAnimationFrame(postHeight); });
+  if (window.ResizeObserver && document.body){
+    new ResizeObserver(function(){ postHeight(); }).observe(document.body);
+  }
+  postHeight();
+})();
+</script>
+</body>
+</html>
