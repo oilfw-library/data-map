@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OILFW Collection Counts</title>
 <style>
-  :root{ --ink:#33301f; --muted:#6b6455; --teal:#1f6f6b; --teal-dark:#175551; --rule:#ddd2b8; }
+  :root{ --ink:#33301f; --muted:#6b6455; --teal:#1f6f6b; --teal-dark:#175551; --rule:#ddd2b8; --line:#b09a6d; }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{font-family:"Optimistic AI VF", system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--ink); background:transparent;}
   .cc-wrap{max-width:1080px; margin:0 auto; padding:14px 12px 10px; text-align:center;}
@@ -16,6 +16,13 @@
   .cc-item{min-width:150px;}
   .cc-num{font-size:27px; font-weight:700; color:var(--teal-dark); font-variant-numeric:tabular-nums;}
   .cc-lab{font-size:13.5px; color:var(--muted); margin-top:2px; letter-spacing:.02em;}
+  .cc-dig{margin:26px auto 0; padding-top:20px; border-top:1px solid var(--rule); max-width:720px;}
+  .cc-dig-label{font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--teal-dark);}
+  .cc-bar{height:12px; background:#ece2c8; border-radius:999px; overflow:hidden; margin:10px 0 8px;}
+  .cc-fill{height:100%; width:0; min-width:3px; border-radius:999px; background:linear-gradient(90deg, var(--line), var(--teal)); transition:width 1.6s ease .2s;}
+  .cc-dig-text{font-size:15.5px;}
+  .cc-dig-text b{color:var(--teal-dark);}
+  .cc-dig-sub{color:var(--muted); font-size:13.5px; margin-top:3px;}
   @media (max-width:640px){
     .cc-total{font-size:40px;}
     .cc-num{font-size:22px;}
@@ -34,6 +41,12 @@
     <div class="cc-item"><div class="cc-num" data-count="1300206">0</div><div class="cc-lab">Completion reports</div></div>
     <div class="cc-item"><div class="cc-num" data-count="498012">0</div><div class="cc-lab">Production records</div></div>
     <div class="cc-item"><div class="cc-num" data-count="137635">0</div><div class="cc-lab">Drillers logs</div></div>
+  </div>
+  <div class="cc-dig">
+    <div class="cc-dig-label">Digitization Progress</div>
+    <div class="cc-bar"><div class="cc-fill" id="ccFill"></div></div>
+    <div class="cc-dig-text"><b id="ccDigCount">0</b> documents digitized so far, <b id="ccDigPct">0%</b> of the collection</div>
+    <div class="cc-dig-sub">Digitization is under way with our partners at NthDS. Most of the archive is still in analog form, on the shelves.</div>
   </div>
 </div>
 <script>
@@ -54,7 +67,15 @@
     requestAnimationFrame(step);
   }
   var els = document.querySelectorAll('[data-count]');
-  function runAll(){ els.forEach(countUp); }
+  /* Digitization tracker: update DIGITIZED as new batches are quantified.
+     Batch 1 (NthDS, Nov 2026): 7,096 wells with LAS on file. */
+  var DIGITIZED = 7096, TOTAL_DOCS = 15301719;
+  function runDig(){
+    document.getElementById('ccDigCount').textContent = fmt(DIGITIZED);
+    document.getElementById('ccDigPct').textContent = (DIGITIZED / TOTAL_DOCS * 100).toFixed(2) + '%';
+    document.getElementById('ccFill').style.width = (DIGITIZED / TOTAL_DOCS * 100) + '%';
+  }
+  function runAll(){ els.forEach(countUp); runDig(); }
   if ('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(e){ if (e.isIntersecting){ runAll(); io.disconnect(); } });
