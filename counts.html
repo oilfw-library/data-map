@@ -68,8 +68,12 @@
   }
   var els = document.querySelectorAll('[data-count]');
   /* Digitization tracker: update DIGITIZED as new batches are quantified.
-     Batch 1 (NthDS, Nov 2026): 7,096 wells with LAS on file. */
-  var DIGITIZED = 7096, TOTAL_DOCS = 15301719;
+     Basis (Nov 28, 2026, Trey's call): NDEX Batch 1 (NthDS) 7,096 wells with LAS
+     + library Google Drive verified holdings: Logs LAS 11,188 files +
+     Logs Raster 38,340 files = 56,624. Dedupe vs NDEX pending the NthDS
+     export; external hard drive holdings NOT included (unverified, duplicated
+     across drives). */
+  var DIGITIZED = 56624, TOTAL_DOCS = 15301719;
   function runDig(){
     document.getElementById('ccDigCount').textContent = fmt(DIGITIZED);
     document.getElementById('ccDigPct').textContent = (DIGITIZED / TOTAL_DOCS * 100).toFixed(2) + '%';
