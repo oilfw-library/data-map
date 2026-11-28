@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OILFW Collection Counts</title>
+<style>
+  :root{ --ink:#33301f; --muted:#6b6455; --teal:#1f6f6b; --teal-dark:#175551; --rule:#ddd2b8; }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:"Optimistic AI VF", system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--ink); background:transparent;}
+  .cc-wrap{max-width:1080px; margin:0 auto; padding:14px 12px 10px; text-align:center;}
+  .cc-total-label{font-size:14px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--teal-dark);}
+  .cc-total{font-size:56px; font-weight:800; line-height:1.05; margin:4px 0 2px; font-variant-numeric:tabular-nums;}
+  .cc-total-sub{color:var(--muted); font-size:15px;}
+  .cc-grid{display:flex; flex-wrap:wrap; justify-content:center; gap:18px 34px; margin-top:22px; padding-top:20px; border-top:1px solid var(--rule);}
+  .cc-item{min-width:150px;}
+  .cc-num{font-size:27px; font-weight:700; color:var(--teal-dark); font-variant-numeric:tabular-nums;}
+  .cc-lab{font-size:13.5px; color:var(--muted); margin-top:2px; letter-spacing:.02em;}
+  @media (max-width:640px){
+    .cc-total{font-size:40px;}
+    .cc-num{font-size:22px;}
+    .cc-item{min-width:128px;}
+  }
+</style>
+</head>
+<body>
+<div class="cc-wrap" id="ccWrap">
+  <div class="cc-total-label">The Collection</div>
+  <div class="cc-total" data-count="15301719">0</div>
+  <div class="cc-total-sub">documents held at the library, across 40 states and provinces</div>
+  <div class="cc-grid">
+    <div class="cc-item"><div class="cc-num" data-count="11124600">0</div><div class="cc-lab">Scout tickets</div></div>
+    <div class="cc-item"><div class="cc-num" data-count="2208901">0</div><div class="cc-lab">Well logs</div></div>
+    <div class="cc-item"><div class="cc-num" data-count="1300206">0</div><div class="cc-lab">Completion reports</div></div>
+    <div class="cc-item"><div class="cc-num" data-count="498012">0</div><div class="cc-lab">Production records</div></div>
+    <div class="cc-item"><div class="cc-num" data-count="137635">0</div><div class="cc-lab">Drillers logs</div></div>
+  </div>
+</div>
+<script>
+  function fmt(n){ return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function countUp(el){
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      el.textContent = fmt(target); return;
+    }
+    var dur = 1900, t0 = null;
+    function step(ts){
+      if (!t0) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(target * eased);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var els = document.querySelectorAll('[data-count]');
+  function runAll(){ els.forEach(countUp); }
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting){ runAll(); io.disconnect(); } });
+    }, {threshold: 0.25});
+    io.observe(document.getElementById('ccWrap'));
+  } else { runAll(); }
+</script>
+</body>
+</html>
