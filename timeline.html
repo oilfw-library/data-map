@@ -17,11 +17,19 @@
   .tl-head p{color:var(--muted); font-size:15px; margin-top:4px;}
   .tl-scroll{overflow-x:auto; overflow-y:hidden; padding:64px 6px 58px; scrollbar-width:thin; -webkit-overflow-scrolling:touch;}
   .tl-track{position:relative; min-width:1560px; height:0;}
-  .tl-line{position:absolute; left:0; right:26px; top:0; height:4px; border-radius:2px;
+  .tl-line{position:absolute; left:0; right:26px; top:0; height:4px; border-radius:2px; transform-origin:left center;
     background:linear-gradient(90deg, var(--line), var(--teal));}
-  .tl-arrow{position:absolute; right:0; top:-9px; width:0; height:0;
+  .tl-wrap.play .tl-line{animation:tlDraw 1.6s ease forwards;}
+  @keyframes tlDraw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  .tl-arrow{position:absolute; right:0; top:-9px; width:0; height:0; opacity:0;
     border-top:11px solid transparent; border-bottom:11px solid transparent; border-left:24px solid var(--teal);}
-  .tl-point{position:absolute; top:0; transform:translateX(-50%); background:none; border:none; cursor:pointer; font:inherit;}
+  .tl-wrap.play .tl-arrow{animation:tlPop .4s ease 1.65s forwards;}
+  .tl-point{position:absolute; top:0; transform:translateX(-50%); background:none; border:none; cursor:pointer; font:inherit; opacity:0;}
+  .tl-wrap.play .tl-point{animation:tlPop .45s ease forwards; animation-delay:calc(var(--i) * 95ms + .35s);}
+  @keyframes tlPop{from{opacity:0}to{opacity:1}}
+  @media (prefers-reduced-motion: reduce){
+    .tl-line,.tl-arrow,.tl-point{animation:none !important; transition:none !important; opacity:1 !important;}
+  }
   .tl-dot{position:absolute; left:50%; top:-9px; transform:translateX(-50%); width:22px; height:22px; border-radius:50%;
     background:#fff; border:4px solid var(--teal); transition:transform .15s ease, background .15s ease;}
   .tl-point:hover .tl-dot{transform:translateX(-50%) scale(1.2);}
@@ -84,6 +92,7 @@
   <div class="tl-hint">Scroll the line sideways for the full span. Photos of the actual records, and links to them, are being added point by point.</div>
 </div>
 <script>
+  /* To finish a point later: set photo to an image URL and link to its Data Portal URL. */
   var POINTS = [
     {year:"Early 1900s", title:"The Oldest Data in the Stacks", text:"The timeline opens with the oldest records the library holds, the starting point of everything on the shelves.", photo:null, link:null},
     {year:"1917", title:"The Ranger Gusher", text:"The J.H. McCleskey No. 1 comes in near Ranger on October 17, 1917, and Fort Worth becomes the business hub of the boom.", photo:null, link:null},
@@ -107,6 +116,7 @@
     b.type = 'button';
     b.className = 'tl-point ' + (i % 2 === 0 ? 'up' : 'down');
     b.style.left = (4 + i * (92 / (POINTS.length - 1))) + '%';
+    b.style.setProperty('--i', i);
     b.setAttribute('aria-label', p.year + ' ' + p.title);
     b.innerHTML = '<span class="tl-stem"></span><span class="tl-dot"></span><span class="tl-year">' + p.year + '</span>';
     b.addEventListener('click', function(){ select(i, true); });
@@ -131,9 +141,31 @@
       sc.scrollTo({left: Math.max(0, target), behavior: 'smooth'});
     }
   }
-  document.getElementById('tlPrev').addEventListener('click', function(){ if (current > 0) select(current - 1, true); });
-  document.getElementById('tlNext').addEventListener('click', function(){ if (current < POINTS.length - 1) select(current + 1, true); });
+  document.getElementById('tlPrev').addEventListener('click', function(){ stopTour(); if (current > 0) select(current - 1, true); });
+  document.getElementById('tlNext').addEventListener('click', function(){ stopTour(); if (current < POINTS.length - 1) select(current + 1, true); });
   select(5, false);
+
+  /* Draw-in animation + slow auto-tour when the timeline scrolls into view.
+     The tour stops the moment a visitor interacts. */
+  var tourTimer = null;
+  function stopTour(){ if (tourTimer){ clearInterval(tourTimer); tourTimer = null; } }
+  function startTour(){
+    if (tourTimer) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    tourTimer = setInterval(function(){ select((current + 1) % POINTS.length, true); }, 4500);
+  }
+  var wrap = document.querySelector('.tl-wrap');
+  ['pointerdown','wheel','touchstart'].forEach(function(ev){
+    wrap.addEventListener(ev, stopTour, {passive:true});
+  });
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ wrap.classList.add('play'); startTour(); io.disconnect(); }
+      });
+    }, {threshold: 0.2});
+    io.observe(wrap);
+  } else { wrap.classList.add('play'); }
 </script>
 </body>
 </html>
