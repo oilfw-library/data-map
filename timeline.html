@@ -167,5 +167,17 @@
     io.observe(wrap);
   } else { wrap.classList.add('play'); }
 </script>
+<script>
+  (function(){
+    function postHeight(){
+      var h = Math.max(document.documentElement.scrollHeight, document.body ? document.body.scrollHeight : 0);
+      if (window.parent && window.parent !== window) window.parent.postMessage({type:"oilfw-timeline-height", height:h}, "*");
+    }
+    window.addEventListener("load", postHeight);
+    window.addEventListener("resize", postHeight);
+    document.addEventListener("click", function(){ requestAnimationFrame(postHeight); setTimeout(postHeight, 400); });
+    setInterval(postHeight, 1200);
+  })();
+</script>
 </body>
 </html>
