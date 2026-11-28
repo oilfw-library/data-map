@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OILFW Timeline</title>
+<style>
+  :root{
+    --ink:#33301f; --muted:#6b6455; --line:#b09a6d; --teal:#1f6f6b; --teal-dark:#175551;
+    --card:#f8f3e7; --card-border:#ddd2b8; --bg:transparent;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:"Optimistic AI VF", system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--ink); background:var(--bg);}
+  .tl-wrap{max-width:1180px; margin:0 auto; padding:18px 10px 8px;}
+  .tl-head{text-align:center; margin-bottom:6px;}
+  .tl-head h2{font-size:26px; letter-spacing:.01em;}
+  .tl-head p{color:var(--muted); font-size:15px; margin-top:4px;}
+  .tl-scroll{overflow-x:auto; overflow-y:hidden; padding:64px 6px 58px; scrollbar-width:thin; -webkit-overflow-scrolling:touch;}
+  .tl-track{position:relative; min-width:1560px; height:0;}
+  .tl-line{position:absolute; left:0; right:26px; top:0; height:4px; border-radius:2px;
+    background:linear-gradient(90deg, var(--line), var(--teal));}
+  .tl-arrow{position:absolute; right:0; top:-9px; width:0; height:0;
+    border-top:11px solid transparent; border-bottom:11px solid transparent; border-left:24px solid var(--teal);}
+  .tl-point{position:absolute; top:0; transform:translateX(-50%); background:none; border:none; cursor:pointer; font:inherit;}
+  .tl-dot{position:absolute; left:50%; top:-9px; transform:translateX(-50%); width:22px; height:22px; border-radius:50%;
+    background:#fff; border:4px solid var(--teal); transition:transform .15s ease, background .15s ease;}
+  .tl-point:hover .tl-dot{transform:translateX(-50%) scale(1.2);}
+  .tl-point.active .tl-dot{background:var(--teal); transform:translateX(-50%) scale(1.3); box-shadow:0 0 0 5px rgba(31,111,107,.18);}
+  .tl-year{position:absolute; left:50%; transform:translateX(-50%); white-space:nowrap; font-weight:700; font-size:15px; color:var(--ink);}
+  .tl-point.up .tl-year{bottom:20px;}
+  .tl-point.down .tl-year{top:20px;}
+  .tl-stem{position:absolute; left:50%; transform:translateX(-50%); width:2px; background:var(--line); opacity:.65;}
+  .tl-point.up .tl-stem{bottom:2px; height:34px;}
+  .tl-point.down .tl-stem{top:2px; height:34px;}
+  .tl-card{margin:2px auto 10px; max-width:760px; background:var(--card); border:1px solid var(--card-border);
+    border-radius:14px; padding:20px 22px; display:flex; gap:18px; align-items:flex-start;}
+  .tl-photo{flex:0 0 168px; width:168px; height:124px; border-radius:10px; border:1px dashed #b7a97f;
+    display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:12.5px; text-align:center; padding:8px; background:#fdfaf1;}
+  .tl-photo img{width:100%; height:100%; object-fit:cover; border-radius:10px; display:block;}
+  .tl-photo.has{border:none; padding:0; background:none;}
+  .tl-body h3{font-size:20px; margin-bottom:2px;}
+  .tl-body .tl-y{color:var(--teal-dark); font-weight:700; font-size:13.5px; letter-spacing:.06em; text-transform:uppercase;}
+  .tl-body p{font-size:15.5px; line-height:1.5; margin-top:6px;}
+  .tl-body a.tl-link{display:inline-block; margin-top:10px; color:#fff; background:var(--teal); text-decoration:none;
+    padding:8px 14px; border-radius:999px; font-size:14px; font-weight:600;}
+  .tl-body a.tl-link:hover{background:var(--teal-dark);}
+  .tl-nav{display:flex; justify-content:center; gap:10px; margin-top:2px;}
+  .tl-nav button{font:inherit; font-size:14px; font-weight:600; color:var(--teal-dark); background:#fff;
+    border:1.5px solid var(--teal); border-radius:999px; padding:6px 16px; cursor:pointer;}
+  .tl-nav button:hover{background:rgba(31,111,107,.08);}
+  .tl-hint{text-align:center; color:var(--muted); font-size:13px; margin-top:8px;}
+  @media (max-width:640px){
+    .tl-head h2{font-size:21px;}
+    .tl-card{flex-direction:column;}
+    .tl-photo{flex:none; width:100%; height:150px;}
+  }
+</style>
+</head>
+<body>
+<div class="tl-wrap">
+  <div class="tl-head">
+    <h2>From the Stacks: A Fort Worth Timeline</h2>
+    <p>Industry moments and library milestones, told through the data on our shelves. Select a marker to read its story.</p>
+  </div>
+  <div class="tl-scroll" id="tlScroll">
+    <div class="tl-track" id="tlTrack">
+      <div class="tl-line"></div>
+      <div class="tl-arrow"></div>
+    </div>
+  </div>
+  <div class="tl-card" id="tlCard">
+    <div class="tl-photo" id="tlPhoto">Photo of the record<br>coming soon</div>
+    <div class="tl-body">
+      <div class="tl-y" id="tlYear"></div>
+      <h3 id="tlTitle"></h3>
+      <p id="tlText"></p>
+      <a class="tl-link" id="tlLink" href="#" target="_blank" rel="noopener" style="display:none">See it in the Data Portal</a>
+    </div>
+  </div>
+  <div class="tl-nav">
+    <button id="tlPrev" type="button">&#8592; Earlier</button>
+    <button id="tlNext" type="button">Later &#8594;</button>
+  </div>
+  <div class="tl-hint">Scroll the line sideways for the full span. Photos of the actual records, and links to them, are being added point by point.</div>
+</div>
+<script>
+  var POINTS = [
+    {year:"Early 1900s", title:"The Oldest Data in the Stacks", text:"The timeline opens with the oldest records the library holds, the starting point of everything on the shelves.", photo:null, link:null},
+    {year:"1917", title:"The Ranger Gusher", text:"The J.H. McCleskey No. 1 comes in near Ranger on October 17, 1917, and Fort Worth becomes the business hub of the boom.", photo:null, link:null},
+    {year:"1918", title:"Burkburnett Blows In", text:"The Fowler farm well touches off the Burkburnett townsite frenzy, with derricks rising in front yards.", photo:null, link:null},
+    {year:"1925", title:"Fort Worth Geological Society Founded", text:"Fort Worth's geologists organize the FWGS, the professional community the library would later serve and partner with.", photo:null, link:null},
+    {year:"1981", title:"The First Barnett Well", text:"Mitchell Energy completes the C.W. Slay No. 1 near Newark in Wise County, the discovery well of the Newark East (Barnett Shale) field.", photo:null, link:null},
+    {year:"1985", title:"OILFW Opens Its Doors", text:"The Oil Information Library of Fort Worth opens, built on donated data: Texas scout cards from the UPR Champlin Collection and a microfiche log library.", photo:null, link:null},
+    {year:"1985", title:"The Barnett Shale Workshop", text:"In its founding year, the library hosts a Barnett Shale workshop that plays a major role in the library's history and in the shale story itself, years before the Barnett is an industry play.", photo:null, link:null},
+    {year:"1997\u201398", title:"The Slickwater Breakthrough", text:"Nick Steinsberger's water fracs on Mitchell's S.H. Griffin wells replace expensive gel fracs, and the shale revolution starts in the Fort Worth Basin.", photo:null, link:null},
+    {year:"2001", title:"Devon Buys Mitchell", text:"Devon's acquisition of Mitchell Energy turns the Barnett into an industry-wide play; within a few years rigs are drilling beside Fort Worth neighborhoods and the airport.", photo:null, link:null},
+    {year:"2022", title:"The NthDS Partnership Begins", text:"OILFW partners with NthDS to digitize analog well logs on demand, the library's bridge from paper to digital.", photo:null, link:null},
+    {year:"2024", title:"Tech Talks Begin", text:"OILFW starts hosting Tech Talks, working geologists presenting to the local community at the library.", photo:null, link:null},
+    {year:"2024", title:"Core Workshops Begin", text:"The first annual core workshop, the OILFW-STARR Strawn Core Workshop of September 11, 2024, starts a hands-on tradition of working real core.", photo:null, link:null},
+    {year:"2026", title:"OIL on the Lake", text:"The library gathers at Mosque Point Park on Lake Worth for the OIL on the Lake Shoreline Social.", photo:null, link:null},
+    {year:"2026", title:"The Archive Starts Going Live", text:"OILFW data reaches the NDEX marketplace and the library launches its multiyear project to digitize the collection, with most of the archive still in analog form.", photo:null, link:null}
+  ];
+  var track = document.getElementById('tlTrack');
+  var current = 0;
+  POINTS.forEach(function(p, i){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'tl-point ' + (i % 2 === 0 ? 'up' : 'down');
+    b.style.left = (4 + i * (92 / (POINTS.length - 1))) + '%';
+    b.setAttribute('aria-label', p.year + ' ' + p.title);
+    b.innerHTML = '<span class="tl-stem"></span><span class="tl-dot"></span><span class="tl-year">' + p.year + '</span>';
+    b.addEventListener('click', function(){ select(i, true); });
+    track.appendChild(b);
+  });
+  var dots = track.querySelectorAll('.tl-point');
+  function select(i, scroll){
+    current = i;
+    dots.forEach(function(d, j){ d.classList.toggle('active', j === i); });
+    var p = POINTS[i];
+    document.getElementById('tlYear').textContent = p.year;
+    document.getElementById('tlTitle').textContent = p.title;
+    document.getElementById('tlText').textContent = p.text;
+    var ph = document.getElementById('tlPhoto');
+    if (p.photo){ ph.classList.add('has'); ph.innerHTML = '<img src="' + p.photo + '" alt="' + p.title + '">'; }
+    else { ph.classList.remove('has'); ph.innerHTML = 'Photo of the record<br>coming soon'; }
+    var lk = document.getElementById('tlLink');
+    if (p.link){ lk.href = p.link; lk.style.display = 'inline-block'; } else { lk.style.display = 'none'; }
+    if (scroll){
+      var sc = document.getElementById('tlScroll');
+      var target = dots[i].offsetLeft - sc.clientWidth / 2;
+      sc.scrollTo({left: Math.max(0, target), behavior: 'smooth'});
+    }
+  }
+  document.getElementById('tlPrev').addEventListener('click', function(){ if (current > 0) select(current - 1, true); });
+  document.getElementById('tlNext').addEventListener('click', function(){ if (current < POINTS.length - 1) select(current + 1, true); });
+  select(5, false);
+</script>
+</body>
+</html>
