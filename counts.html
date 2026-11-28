@@ -62,5 +62,16 @@
     io.observe(document.getElementById('ccWrap'));
   } else { runAll(); }
 </script>
+<script>
+  (function(){
+    function postHeight(){
+      var h = Math.max(document.documentElement.scrollHeight, document.body ? document.body.scrollHeight : 0);
+      if (window.parent && window.parent !== window) window.parent.postMessage({type:"oilfw-counts-height", height:h}, "*");
+    }
+    window.addEventListener("load", postHeight);
+    window.addEventListener("resize", postHeight);
+    setInterval(postHeight, 1200);
+  })();
+</script>
 </body>
 </html>
